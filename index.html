@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio của Thành Nghĩa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <style>
+        :root {
+            --primary-color: #2563EB;
+            --accent-color: #06B6D4;
+            --bg-dark: #0A0A0A;
+            --card-bg: #1A1A1A;
+            --text-light: #FAFAFA;
+            --glow-color: rgba(37, 99, 235, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            background-image: radial-gradient(circle at 10% 80%, var(--glow-color) 0%, transparent 10%), 
+                              radial-gradient(circle at 80% 20%, var(--glow-color) 0%, transparent 10%);
+            background-size: 200% 200%;
+            animation: move-bg 20s infinite alternate;
+            min-height: 100vh;
+            transition: all 0.5s ease-in-out;
+        }
+
+        @keyframes move-bg {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+
+        .download-btn {
+            position: relative;
+            overflow: hidden;
+            transition: background-color 0.3s ease, transform 0.2s;
+        }
+        .download-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+        }
+
+        .content-section {
+            transition: opacity 0.4s ease-in-out;
+            box-shadow: none !important; 
+            border: none !important;
+            will-change: opacity;
+        }
+
+        .nav-btn.active-ig {
+            border-bottom: 2px solid var(--text-light) !important;
+            color: var(--text-light) !important;
+            background-color: transparent !important;
+        }
+        .nav-btn:not(.active-ig) {
+            color: #737373 !important;
+            background-color: transparent !important;
+            border-bottom: 1px solid #262626;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #374151;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Modal xem ảnh lớn -->
+    <div id="image-modal"
+         class="fixed inset-0 z-50 hidden bg-black bg-opacity-90 backdrop-blur-sm items-center justify-center p-4"
+         onclick="closeModal()">
+        <button id="close-modal-btn"
+                class="absolute top-4 right-4 text-white text-5xl hover:text-gray-300 transition-colors z-50 p-2 leading-none focus:outline-none"
+                aria-label="Đóng">&times;</button>
+        <div class="max-w-4xl max-h-screen" onclick="event.stopPropagation()">
+            <img id="modal-image" src="" alt="Ảnh phóng to"
+                 class="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl">
+        </div>
+    </div>
+
+    <!-- Dữ liệu Portfolio -->
+    <script>
+        const myPortfolio = {
+            id: 'my-portfolio',
+            name: 'Đinh Ngô Thành Nghĩa',
+            username: 'Dthnghia_2010',
+            title: 'Sinh viên CNTT & Nhiếp ảnh gia nghiệp dư',
+            residence: 'TP. Hồ Chí Minh, Việt Nam',
+            hometown: 'Hải Phòng, Việt Nam',
+            phone: '09320122345',
+            email: '24050058@student.bdu.edu.vn',
+            dob: '20/10/2006',
+            socials: {
+                facebook: 'https://facebook.com/your-profile',
+                linkedin: 'https://linkedin.com/in/your-profile',
+                github: 'https://github.com/your-profile'
+            },
+            bio: 'Xin chào, mình là Thành Nghĩa! Mình là sinh viên Công nghệ thông tin (CNTT), đồng thời cũng là người đam mê chụp ảnh và yêu thích truyện tranh, phim ảnh. Rất mong được trò chuyện cùng bạn!',
+            cvLink: 'CV_Cua_Toi.pdf',
+
+            // 🖼 Avatar và ảnh trong thư mục "images/"
+            avatar: 'images/ảnh 2.jpg',
+            images: [
+                'images/ảnh 1.jpg',
+                'images/ảnh 2.jpg',
+                'images/ảnh 3.jpg',
+                'images/ảnh 4.jpg'
+            ],
+
+            hobbies: ['Lập trình cuối tuần', 'Truyện tranh', 'Phim ảnh'],
+            skills: ['Python', 'SQL', 'C#', 'C++'],
+            projects: [
+                { name: 'Phần mềm Chấm công Nhân viên', desc: 'Hệ thống chấm công C# .NET & SQL.' },
+                { name: 'Phần mềm Quản lý Sức khỏe & Thể hình', desc: 'Ứng dụng quản lý dinh dưỡng Python.' }
+            ],
+            education: [
+                { 
+                    institution: 'Đại Học Bình Dương', 
+                    degree: 'Sinh viên ngành Công nghệ thông tin', 
+                    period: '2025 - Hiện tại', 
+                    description: 'Tập trung vào phát triển phần mềm, trí tuệ nhân tạo và khoa học dữ liệu. Đạt học bổng khuyến khích học tập kỳ I.' 
+                }
+            ]
+        };
+    </script>
+
+    <main id="portfolio-main" class="min-h-screen max-w-2xl mx-auto pt-4 sm:pt-8"></main>
+
+    <footer class="py-6 text-center border-t border-[#262626] mt-10">
+        <p class="text-gray-500 text-sm">&copy; 2025 Portfolio Cá Nhân. Thiết kế theo phong cách Instagram.</p>
+    </footer>
+
+    <script>
+        const portfolioMain = document.getElementById('portfolio-main');
+
+        function openModal(imgUrl) {
+            const modal = document.getElementById('image-modal');
+            const modalImg = document.getElementById('modal-image');
+            modalImg.src = imgUrl;
+            modal.classList.remove('hidden');
+            modal.style.opacity = 0;
+            setTimeout(() => { modal.style.opacity = 1; }, 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('image-modal');
+            modal.style.opacity = 0;
+            setTimeout(() => { 
+                modal.classList.add('hidden'); 
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+
+        function setupModalListeners() {
+            const closeBtn = document.getElementById('close-modal-btn');
+            if (closeBtn) closeBtn.addEventListener('click', closeModal);
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeModal();
+            });
+        }
+
+        function showSection(targetId) {
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(s => { s.classList.add('hidden'); s.style.opacity = 0; });
+
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(b => b.classList.remove('active-ig'));
+
+            const target = document.getElementById(targetId);
+            if (target) {
+                target.classList.remove('hidden');
+                setTimeout(() => { target.style.opacity = 1; }, 10);
+                const activeButton = document.querySelector(`[data-section-id="${targetId}"]`);
+                if (activeButton) activeButton.classList.add('active-ig');
+            }
+        }
+
+        function setupNavigation() {
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const targetId = e.currentTarget.getAttribute('data-section-id');
+                    showSection(targetId);
+                });
+            });
+        }
+
+        function renderPortfolio(member) {
+            const skillsHtml = member.skills.map(s => `<span class="bg-gray-700 text-gray-200 text-sm px-3 py-1 rounded-md">${s}</span>`).join('');
+            const projectsHtml = member.projects.map(p => `
+                <div class="p-3 bg-gray-900 rounded-lg border-l-4 border-blue-500">
+                    <h4 class="font-semibold text-sm text-blue-400">${p.name}</h4>
+                    <p class="text-gray-400 text-xs">${p.desc}</p>
+                </div>`).join('');
+            const educationHtml = member.education.map(e => `
+                <div class="p-4 bg-gray-900 rounded-lg border border-gray-800 hover:border-blue-500 hover:shadow-lg transition-all">
+                    <h4 class="font-semibold text-lg text-white">${e.institution}</h4>
+                    <p class="text-blue-400 text-sm font-medium">${e.degree}</p>
+                    <p class="text-gray-500 text-xs mt-1"><i class="fas fa-clock mr-1"></i> ${e.period}</p>
+                    <p class="text-gray-400 text-sm mt-2">${e.description}</p>
+                </div>`).join('');
+
+            const navHtml = `
+                <button data-section-id="intro-content" class="nav-btn flex-1 py-3 active-ig">
+                    <i class="fas fa-id-card"></i>
+                </button>
+                <button data-section-id="details-content" class="nav-btn flex-1 py-3">
+                    <i class="fas fa-th"></i>
+                </button>`;
+
+            const galleryHtml = member.images.map((img, i) => `
+                <div class="relative overflow-hidden aspect-square">
+                    <img src="${img}" alt="Ảnh ${i + 1}"
+                         class="w-full h-full object-cover hover:scale-105 transition-transform cursor-pointer"
+                         onclick="openModal('${img}')">
+                </div>`).join('');
+
+            return `
+                <header class="p-4 sm:p-6 mb-4">
+                    <div class="flex items-center space-x-6">
+                        <img src="${member.avatar}" alt="${member.name}"
+                             class="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-2 border-gray-600">
+                        <div>
+                            <h2 class="text-2xl font-semibold">${member.username}</h2>
+                            <p class="text-sm text-gray-400">${member.name}</p>
+                            <div class="flex space-x-2 mt-2">
+                                <a href="tel:${member.phone}" class="bg-[#262626] text-white text-xs font-semibold py-1 px-3 rounded-lg">Liên Hệ</a>
+                                <a href="${member.cvLink}" download
+                                   class="download-btn bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold py-1 px-3 rounded-lg flex items-center space-x-1">
+                                   <i class="fas fa-download"></i><span>CV</span></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-base font-semibold">${member.title}</p>
+                        <p class="text-sm text-gray-300 mt-1">${member.bio}</p>
+                        <div class="flex space-x-4 text-gray-400 mt-3">
+                            <a href="${member.socials.linkedin}" target="_blank" class="hover:text-blue-400"><i class="fab fa-linkedin text-lg"></i></a>
+                            <a href="${member.socials.github}" target="_blank" class="hover:text-white"><i class="fab fa-github text-lg"></i></a>
+                            <a href="${member.socials.facebook}" target="_blank" class="hover:text-blue-500"><i class="fab fa-facebook text-lg"></i></a>
+                        </div>
+                    </div>
+                </header>
+
+                <nav class="flex justify-around border-t border-b border-[#262626] bg-card-bg sticky top-0 z-10">${navHtml}</nav>
+
+                <div id="intro-content" class="content-section p-4 sm:p-6" style="opacity: 1;">
+                    <h4 class="text-2xl font-bold mb-4 border-b border-gray-800 pb-2">Thông tin liên hệ</h4>
+                    <div class="space-y-3 text-gray-400 mb-8 pb-4 border-b border-gray-800">
+                        <p><i class="fas fa-calendar-day mr-3 text-blue-400"></i> Ngày sinh: ${member.dob}</p>
+                        <p><i class="fas fa-city mr-3 text-blue-400"></i> Quê quán: ${member.hometown}</p>
+                        <p><i class="fas fa-map-marker-alt mr-3 text-blue-400"></i> Cư trú: ${member.residence}</p>
+                        <p><i class="fas fa-phone mr-3 text-blue-400"></i> <a href="tel:${member.phone}" class="hover:text-blue-300">${member.phone}</a></p>
+                        <p><i class="fas fa-envelope mr-3 text-blue-400"></i> <a href="mailto:${member.email}" class="hover:text-blue-300">${member.email}</a></p>
+                    </div>
+                    <h4 class="text-2xl font-bold mb-4 border-b border-gray-800 pb-2">Học Vấn</h4>
+                    <div class="space-y-4">${educationHtml}</div>
+                </div>
+
+                <div id="details-content" class="content-section hidden p-4 sm:p-6">
+                    <h4 class="text-xl font-bold text-gray-300 mb-4">Kỹ Năng & Dự Án</h4>
+                    <div class="flex flex-wrap gap-2 mb-4">${skillsHtml}</div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">${projectsHtml}</div>
+                    <div class="grid grid-cols-3 gap-0.5 md:gap-1">${galleryHtml}</div>
+                </div>
+            `;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            portfolioMain.innerHTML = renderPortfolio(myPortfolio);
+            setupModalListeners();
+            setupNavigation();
+            showSection('intro-content');
+        });
+    </script>
+</body>
+</html>

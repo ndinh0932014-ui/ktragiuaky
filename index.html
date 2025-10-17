@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portfolio của Thành Nghĩa</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    :root {
+      --primary-color: #2563EB;
+      --accent-color: #06B6D4;
+      --bg-dark: #0A0A0A;
+      --card-bg: #1A1A1A;
+      --text-light: #FAFAFA;
+      --glow-color: rgba(37, 99, 235, 0.15);
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-light);
+      background-image: radial-gradient(circle at 10% 80%, var(--glow-color) 0%, transparent 10%),
+                        radial-gradient(circle at 80% 20%, var(--glow-color) 0%, transparent 10%);
+      background-size: 200% 200%;
+      animation: move-bg 25s ease-in-out infinite alternate;
+      min-height: 100vh;
+      transition: all 0.5s ease-in-out;
+    }
+    @keyframes move-bg { 0% { background-position: 0% 0%; filter: hue-rotate(0deg);} 100% { background-position: 100% 100%; filter: hue-rotate(10deg);} }
+    @keyframes fade-in { 0% { opacity: 0; transform: translateY(30px) scale(0.98); filter: blur(6px);} 100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0);} }
+    .fade-in { animation: fade-in 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    @keyframes fade-up { 0% { opacity: 0; transform: translateY(40px) scale(0.95);} 60% { opacity: 1; transform: translateY(-5px) scale(1.02);} 100% { opacity: 1; transform: translateY(0) scale(1);} }
+    .fade-up { animation: fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+    @keyframes zoom-in { 0% { opacity: 0; transform: scale(0.8) rotate(-2deg); filter: blur(3px);} 80% { opacity: 1; transform: scale(1.03) rotate(0deg); filter: blur(0);} 100% { transform: scale(1);} }
+    .zoom-in { animation: zoom-in 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
+    img:hover { transition: all 0.4s ease-in-out; filter: brightness(1.1) saturate(1.1); }
+    .download-btn { position: relative; overflow: hidden; transition: background-color 0.3s ease, transform 0.25s ease; }
+    .download-btn::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent); transition: all 0.5s; }
+    .download-btn:hover::after { left: 100%; }
+    .download-btn:hover { transform: scale(1.05); box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4); }
+    .content-section { transition: opacity 0.6s ease, transform 0.6s ease; transform: translateY(0); }
+    .nav-btn { position: relative; transition: all 0.3s ease-in-out; }
+    .nav-btn.active-ig::after { content: ''; position: absolute; bottom: 0; left: 20%; width: 60%; height: 2px; background-color: var(--accent-color); border-radius: 2px; animation: underline 0.4s ease-in-out forwards; }
+    @keyframes underline { from { width: 0; opacity: 0;} to { width: 60%; opacity: 1;} }
+    .nav-btn.active-ig { color: var(--text-light) !important; transform: scale(1.05); }
+    .nav-btn:not(.active-ig) { color: #737373 !important; }
+    html { scroll-behavior: smooth; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 10px; }
+    ::-webkit-scrollbar-track { background: #374151; }
+    .post-card { background-color: #1A1A1A; border-radius: 10px; overflow: hidden; transition: 0.3s; position: relative; }
+    .post-card:hover { transform: scale(1.02); }
+    .post-card img { width: 100%; height: auto; object-fit: contain; max-height: 500px; cursor: pointer; transition: 0.3s; display: block; margin: 0 auto; border-radius: 10px; background-color: #000; }
+    .caption-text[contenteditable="true"] { outline: none; }
+    @keyframes heart-fly { 0% { transform: scale(1) translateY(0); opacity: 1; } 50% { transform: scale(1.4) translateY(-20px); opacity: 0.8; } 100% { transform: scale(1) translateY(-40px); opacity: 0; } }
+    .heart-fly { position: absolute; font-size: 20px; color: #f87171; pointer-events: none; animation: heart-fly 0.7s ease-out forwards; }
+    .existing-comments p { margin: 0.125rem 0; }
+  </style>
+</head>
+<body>
+  <!-- Modal xem ảnh lớn -->
+  <div id="image-modal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-90 backdrop-blur-sm items-center justify-center p-4" onclick="closeModal()">
+    <button id="close-modal-btn" class="absolute top-4 right-4 text-white text-5xl hover:text-gray-300 transition-colors z-50 p-2 leading-none focus:outline-none" aria-label="Đóng">&times;</button>
+    <div class="max-w-4xl max-h-screen" onclick="event.stopPropagation()">
+      <img id="modal-image" src="" alt="Ảnh phóng to" class="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl fade-in">
+    </div>
+  </div>
+
+  <script>
+    const myPortfolio = {
+      id: 'my-portfolio',
+      name: 'Đinh Ngô Thành Nghĩa',
+      username: 'Dthnghia_2010',
+      title: 'Sinh viên CNTT',
+      residence: 'TP. Hồ Chí Minh, Việt Nam',
+      hometown: 'Hải Phòng, Việt Nam',
+      phone: '09320122345',
+      email: '24050058@student.bdu.edu.vn',
+      dob: '20/10/2006',
+      socials: { facebook:'#', linkedin:'#', github:'#' },
+      bio: 'Xin chào, mình là Thành Nghĩa! Mình là sinh viên CNTT và đam mê chụp ảnh,truyện tranh,phim ảnh.',
+      cvLink: '#',
+      avatar: 'images/ảnh 2.jpg',
+      images: ['images/ảnh 1.jpg','images/ảnh 2.jpg','images/ảnh 3.jpg','images/ảnh 4.jpg'],
+      posts: [
+        { img: 'https://images.unsplash.com/photo-1556742031-c6961e8560b0?auto=format&fit=crop&w=800&q=80', caption: 'Phần mềm chấm công nhân viên 💼' },
+        { img: 'images/movie.jpg' },
+        { img: 'images/comic.jpg' }
+      ],
+      skills: ['Python','SQL','C#','C++'],
+      projects: [
+      { name: 'Phần mềm Chấm công', desc: 'C# .NET & SQL.' },
+      { name: 'Dự án thể hình và sức khỏe', desc: 'Website hỗ trợ theo dõi tập luyện và dinh dưỡng cá nhân.' }
+    ],
+      education: [{ institution:'Đại Học Bình Dương', degree:'CNTT', period:'2025-Hiện tại', description:'Học bổng kỳ I.' }]
+    };
+  </script>
+
+  <main id="portfolio-main" class="min-h-screen max-w-2xl mx-auto pt-4 sm:pt-8"></main>
+
+  <footer class="py-6 text-center border-t border-[#262626] mt-10 fade-up">
+    <p class="text-gray-500 text-sm">&copy; 2025 Portfolio Cá Nhân. Thiết kế theo phong cách Instagram.</p>
+  </footer>
+
+  <script>
+    // Utility
+    function escapeHtml(unsafe){ if(!unsafe) return ''; return String(unsafe).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#039;"); }
+
+    function openModal(imgUrl) {
+      const modal = document.getElementById('image-modal');
+      const modalImg = document.getElementById('modal-image');
+      modalImg.src = imgUrl;
+      modal.classList.remove('hidden');
+      modal.style.opacity = 0;
+      setTimeout(()=> modal.style.opacity = 1, 10);
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+      const modal = document.getElementById('image-modal');
+      modal.style.opacity = 0;
+      setTimeout(()=> { modal.classList.add('hidden'); document.body.style.overflow='auto'; }, 300);
+    }
+    function setupModalListeners() {
+      const closeBtn = document.getElementById('close-modal-btn');
+      if(closeBtn) closeBtn.addEventListener('click', closeModal);
+      document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeModal(); });
+    }
+
+    // Render function (full markup)
+    function renderPortfolio(member){
+      const skillsWithPercent = [
+  { name: 'Python', percent: 85 },
+  { name: 'SQL', percent: 75 },
+  { name: 'C#', percent: 70 },
+  { name: 'C++', percent: 65 }
+];
+const skillsHtml = skillsWithPercent.map(s=>`
+  <div class="mb-4">
+    <div class="flex justify-between text-sm mb-1">
+      <span>${escapeHtml(s.name)}</span>
+      <span>${s.percent}%</span>
+    </div>
+    <div class="w-full bg-gray-700 rounded-full h-3">
+      <div class="bg-blue-600 h-3 rounded-full" style="width:${s.percent}%"></div>
+    </div>
+  </div>
+`).join('');
+      const projectsHtml = member.projects.map(p=>`
+  <div class="p-3 bg-gray-900 rounded-lg border-l-4 border-blue-500 hover:scale-[1.02] transition-transform">
+    <h4 class="font-semibold text-sm text-blue-400">${escapeHtml(p.name)}</h4>
+    <p class="text-gray-400 text-xs mb-2">${escapeHtml(p.desc)}</p>
+    <a href="https://github.com/The-Cool-Coders/Project-Ideas-And-Resources" target="_blank"
+       class="text-xs text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded-md">Xem Demo</a>
+  </div>
+`).join('');
+      const educationHtml = member.education.map(e=>`<div class="p-4 bg-gray-900 rounded-lg border border-gray-800 hover:border-blue-500 hover:shadow-lg transition-all fade-up"><h4 class="font-semibold text-lg text-white">${escapeHtml(e.institution)}</h4><p class="text-blue-400 text-sm font-medium">${escapeHtml(e.degree)}</p><p class="text-gray-500 text-xs mt-1"><i class="fas fa-clock mr-1"></i>${escapeHtml(e.period)}</p><p class="text-gray-400 text-sm mt-2">${escapeHtml(e.description)}</p></div>`).join('');
+      const galleryHtml = member.images.map((img,i)=>`<div class="relative overflow-hidden aspect-square"><img src="${img}" alt="Ảnh ${i+1}" class="w-full h-full object-cover hover:scale-110 transition-transform cursor-pointer zoom-in" onclick="openModal('${img}')"></div>`).join('');
+      // posts: include like/comment placeholders in markup; counts updated later by script
+      const postsHtml = member.posts.map((p,i)=>`
+        <article class="post-card fade-up" data-post-index="${i}">
+          <div style="position:relative;">
+            <img src="${p.img}" alt="Post ${i+1}" onclick="openModal('${p.img}')" />
+          </div>
+
+          <div class="px-3 py-2 flex justify-between items-center text-gray-400 text-sm mt-2">
+            <div class="flex items-center space-x-4">
+              <button class="like-btn hover:text-red-500 transition" data-index="${i}"><i class="fa-regular fa-heart"></i></button>
+              <button class="comment-btn hover:text-blue-400 transition" data-index="${i}"><i class="fa-regular fa-comment"></i></button>
+              <button class="share-btn hover:text-green-400 transition"><i class="fa-solid fa-share-nodes"></i></button>
+            </div>
+            <span class="like-count text-xs text-gray-500" data-index="${i}">0 lượt thích</span>
+          </div>
+
+          ${p.caption ? `<div class="caption-area"><p class="caption-text" contenteditable="true" data-post-index="${i}" spellcheck="true">${escapeHtml(p.caption)}</p></div>` : ''}
+
+          <div class="comment-area mt-2 text-sm text-gray-300 px-3">
+            <div class="existing-comments" data-index="${i}"></div>
+            <input type="text" placeholder="Thêm bình luận..." class="comment-input w-full p-1 mt-1 rounded bg-gray-800 text-white text-xs" data-index="${i}">
+          </div>
+        </article>
+      `).join('');
+
+      return `
+      <header class="p-4 sm:p-6 mb-4 fade-in">
+        <div class="flex items-center space-x-6">
+          <img src="${member.avatar}" alt="${escapeHtml(member.name)}" class="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-2 border-gray-600 shadow-md hover:scale-105 transition-transform">
+          <div>
+            <h2 class="text-2xl font-semibold">${escapeHtml(member.username)}</h2>
+            <p class="text-sm text-gray-400">${escapeHtml(member.name)}</p>
+            <div class="flex space-x-2 mt-2">
+              <a href="tel:${member.phone}" class="bg-[#262626] text-white text-xs font-semibold py-1 px-3 rounded-lg">Liên Hệ</a>
+              <a href="${member.cvLink}" download class="download-btn bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold py-1 px-3 rounded-lg flex items-center space-x-1"><i class="fas fa-download"></i><span>CV</span></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <p class="text-base font-semibold">${escapeHtml(member.title)}</p>
+          <p class="text-sm text-gray-300 mt-1">${escapeHtml(member.bio)}</p>
+          <div class="flex space-x-4 text-gray-400 mt-3">
+            <a href="${member.socials.linkedin}" target="_blank" class="hover:text-blue-400"><i class="fab fa-linkedin text-lg"></i></a>
+            <a href="${member.socials.github}" target="_blank" class="hover:text-white"><i class="fab fa-github text-lg"></i></a>
+            <a href="${member.socials.facebook}" target="_blank" class="hover:text-blue-500"><i class="fab fa-facebook text-lg"></i></a>
+          </div>
+        </div>
+      </header>
+
+      <nav class="flex justify-around border-t border-b border-[#262626] bg-card-bg sticky top-0 z-10">
+        <button data-section-id="intro-content" class="nav-btn flex-1 py-3"><i class="fas fa-id-card"></i></button>
+        <button data-section-id="details-content" class="nav-btn flex-1 py-3"><i class="fas fa-th"></i></button>
+        <button data-section-id="posts-content" class="nav-btn flex-1 py-3"><i class="fas fa-book-open"></i></button>
+      </nav>
+
+      <div id="intro-content" class="content-section p-4 sm:p-6 fade-up" style="opacity:1;">
+        <h4 class="text-2xl font-bold mb-4 border-b border-gray-800 pb-2">Thông tin liên hệ</h4>
+        <div class="space-y-3 text-gray-400 mb-8 pb-4 border-b border-gray-800">
+          <p><i class="fas fa-calendar-day mr-3 text-blue-400"></i> Ngày sinh: ${escapeHtml(member.dob)}</p>
+          <p><i class="fas fa-city mr-3 text-blue-400"></i> Quê quán: ${escapeHtml(member.hometown)}</p>
+          <p><i class="fas fa-map-marker-alt mr-3 text-blue-400"></i> Cư trú: ${escapeHtml(member.residence)}</p>
+          <p><i class="fas fa-phone mr-3 text-blue-400"></i> <a href="tel:${member.phone}" class="hover:text-blue-300">${escapeHtml(member.phone)}</a></p>
+          <p><i class="fas fa-envelope mr-3 text-blue-400"></i> <a href="mailto:${member.email}" class="hover:text-blue-300">${escapeHtml(member.email)}</a></p>
+        </div>
+
+        <h4 class="text-2xl font-bold mb-4 border-b border-gray-800 pb-2">Học Vấn</h4>
+        <div class="space-y-4">${educationHtml}</div>
+      </div>
+
+      <div id="details-content" class="content-section hidden p-4 sm:p-6 fade-up">
+        <h4 class="text-2xl font-bold mb-4 border-b border-gray-800 pb-2">Kỹ Năng</h4>
+        <div class="flex flex-wrap gap-2 mb-6">${skillsHtml}</div>
+
+        <h4 class="text-2xl font-bold mb-4 border-b border-gray-800 pb-2">Dự Án</h4>
+        <div class="grid gap-4">${projectsHtml}</div>
+
+        <h4 class="text-2xl font-bold mt-6 mb-4 border-b border-gray-800 pb-2">Bộ Sưu Tập</h4>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">${galleryHtml}</div>
+      </div>
+
+      <div id="posts-content" class="content-section hidden p-4 sm:p-6 fade-up">
+        <h4 class="text-2xl font-bold mb-4 border-b border-gray-800 pb-2">Bài Viết</h4>
+        <div class="grid gap-6">${postsHtml}</div>
+      </div>
+      `;
+    }
+
+    // After DOM ready: render and wire interactions
+    document.addEventListener('DOMContentLoaded', () => {
+      const portfolioMain = document.getElementById('portfolio-main');
+      portfolioMain.innerHTML = renderPortfolio(myPortfolio);
+      setupModalListeners();
+
+      // Navigation setup
+      const navBtns = document.querySelectorAll('.nav-btn');
+      navBtns.forEach(btn => {
+        btn.addEventListener('click', ()=> {
+          const targetId = btn.dataset.sectionId;
+          document.querySelectorAll('.content-section').forEach(sec => sec.classList.add('hidden'));
+          const target = document.getElementById(targetId);
+          if(target) target.classList.remove('hidden');
+          navBtns.forEach(b => b.classList.remove('active-ig'));
+          btn.classList.add('active-ig');
+        });
+      });
+      // open intro by default
+      const firstNav = document.querySelector('.nav-btn');
+      if(firstNav) firstNav.click();
+
+      // Likes: initial fake counts (many likes) and interaction
+      const initialLikeCounts = [120, 85, 96];
+      const likedPosts = Array(myPortfolio.posts.length).fill(false);
+      const likeCounts = [...initialLikeCounts];
+
+      function updateLikeDisplay(idx){ 
+        const el = document.querySelector(`.like-count[data-index='${idx}']`);
+        if(el) el.textContent = `${likeCounts[idx]} lượt thích`;
+      }
+
+      // Initialize displays
+      for(let i=0;i<myPortfolio.posts.length;i++) updateLikeDisplay(i);
+
+      // Like button handlers & heart-fly
+      document.querySelectorAll('.like-btn').forEach(btn => {
+        const idx = parseInt(btn.dataset.index);
+        btn.addEventListener('click', (e) => {
+          likedPosts[idx] = !likedPosts[idx];
+          if(likedPosts[idx]){
+            likeCounts[idx]++;
+            btn.innerHTML = '<i class="fa-solid fa-heart text-red-500"></i>';
+            // small heart fly effect (from button)
+            const heart = document.createElement('i');
+            heart.className = 'fa-solid fa-heart heart-fly';
+            const rect = btn.getBoundingClientRect();
+            heart.style.left = (e.clientX - rect.left - 10) + 'px';
+            heart.style.top = (e.clientY - rect.top - 10) + 'px';
+            btn.appendChild(heart);
+            setTimeout(()=> heart.remove(), 700);
+          } else {
+            likeCounts[idx] = Math.max(0, likeCounts[idx]-1);
+            btn.innerHTML = '<i class="fa-regular fa-heart"></i>';
+          }
+          updateLikeDisplay(idx);
+        });
+      });
+
+      // Double-click on image to like + show big heart + multiple small hearts
+      document.querySelectorAll('.post-card img').forEach((img, idx) => {
+        img.addEventListener('dblclick', (e) => {
+          // ensure parent positioned
+          const parent = img.parentElement;
+          if(getComputedStyle(parent).position === 'static') parent.style.position = 'relative';
+
+          // set liked if not already
+          if(!likedPosts[idx]) {
+            likedPosts[idx] = true;
+            likeCounts[idx]++;
+            const btn = document.querySelector(`.like-btn[data-index='${idx}']`);
+            if(btn) btn.innerHTML = '<i class="fa-solid fa-heart text-red-500"></i>';
+            updateLikeDisplay(idx);
+          }
+
+          // big heart in center
+          const big = document.createElement('i');
+          big.className = 'fa-solid fa-heart heart-fly';
+          big.style.fontSize = '60px';
+          big.style.left = (img.offsetWidth/2 - 30) + 'px';
+          big.style.top = (img.offsetHeight/2 - 30) + 'px';
+          parent.appendChild(big);
+
+          // several small hearts
+          for(let k=0;k<6;k++){
+            const sh = document.createElement('i');
+            sh.className = 'fa-solid fa-heart heart-fly';
+            sh.style.fontSize = (12 + Math.random()*18) + 'px';
+            // random positions around center
+            const rx = (img.offsetWidth/2) + (Math.random()-0.5)*140;
+            const ry = (img.offsetHeight/2) + (Math.random()-0.5)*140;
+            sh.style.left = rx + 'px';
+            sh.style.top = ry + 'px';
+            parent.appendChild(sh);
+            setTimeout(()=> sh.remove(), 700);
+          }
+          setTimeout(()=> big.remove(), 700);
+        });
+      });
+
+      // Comment: inject preset comment for post 0
+      window.comments = Array(myPortfolio.posts.length).fill(null).map(()=>[]);
+      window.comments[0].push("Tuyệt vời, app quá xịn luôn!");
+      const existing0 = document.querySelector(`.existing-comments[data-index='0']`);
+      if(existing0) existing0.innerHTML = `<p class="mb-1"><span class="font-semibold text-blue-400">Bạn:</span> Tuyệt vời, app quá xịn luôn!</p>`;
+
+      // New comment input (Enter to submit)
+      document.addEventListener('keydown', (e) => {
+        if(e.target.classList.contains('comment-input') && e.key === 'Enter'){
+          e.preventDefault();
+          const idx = parseInt(e.target.dataset.index);
+          const text = e.target.value.trim();
+          if(!text) return;
+          window.comments[idx].push(text);
+          const commentDiv = document.querySelector(`.existing-comments[data-index='${idx}']`);
+          if(commentDiv) commentDiv.innerHTML += `<p class="mb-1"><span class="font-semibold text-blue-400">Bạn:</span> ${escapeHtml(text)}</p>`;
+          e.target.value = '';
+        }
+      });
+
+      // Optional: comment button focus input
+      document.querySelectorAll('.comment-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const idx = parseInt(btn.dataset.index);
+          const input = document.querySelector(`.comment-input[data-index='${idx}']`);
+          if(input) input.focus();
+        });
+      });
+
+      // Share button (demo)
+      document.querySelectorAll('.share-btn').forEach(btn => {
+        btn.addEventListener('click', ()=> { alert('Đã share (demo)'); });
+      });
+
+      // Make caption edits save to localStorage if you want (optional)
+      document.querySelectorAll('.caption-text[contenteditable="true"]').forEach(el => {
+        el.addEventListener('keydown', (ev) => {
+          if(ev.key === 'Enter'){ ev.preventDefault(); el.blur(); }
+        });
+        el.addEventListener('blur', (ev) => {
+          const idx = parseInt(el.dataset.postIndex);
+          const newText = el.innerText.trim();
+          // update in-memory and optionally persist:
+          myPortfolio.posts[idx].caption = newText;
+          // localStorage saving omitted (you said images not saved); add if wanted
+        });
+      });
+
+    }); // DOMContentLoaded
+  </script>
+</body>
+</html>
